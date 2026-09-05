@@ -78,10 +78,15 @@ export default function Home() {
       <header>
         <div className="brand">
           <div className="mark">b</div>
-          <span>Bloom <b>Preflight</b></span>
+          <span>Bloom <b>App Preflight</b></span>
         </div>
-        <span className="badge">Independent product exploration</span>
+        <span className="badge">Independent product exploration · not affiliated with Bloom</span>
       </header>
+
+      <div className="thesisBar">
+        <span>Product thesis</span>
+        <p>AI-generated apps need a lightweight quality gate between “build complete” and “ready to share.”</p>
+      </div>
 
       {step === 1 ? (
         <section className="workspace">
@@ -89,8 +94,7 @@ export default function Home() {
             <p className="eyebrow"><Sparkles size={14} /> Generated app</p>
             <h1>Your app is built.<br />Is it ready?</h1>
             <p className="lede">
-              Preflight checks the generated experience for important flows and reliability gaps
-              before you decide to share it.
+              Preflight reviews an AI-generated app for important user flows and reliability gaps before the creator decides to share it.
             </p>
 
             <div className="appmeta">
@@ -103,8 +107,16 @@ export default function Home() {
               Run App Preflight <ArrowRight size={18} />
             </button>
             <p className="fine">
-              Demo evaluation only. No Bloom APIs or private product data are used.
+              Illustrative evaluation only. No Bloom APIs, private product data, or production systems are used.
             </p>
+
+            <div className="whyCard">
+              <span>WHY THIS EXISTS</span>
+              <p>
+                AI agents can generate a working app quickly. The harder question is whether the app is safe,
+                understandable, and complete enough to share. This prototype explores that quality gate.
+              </p>
+            </div>
           </div>
 
           <div className="phoneWrap">
@@ -159,7 +171,7 @@ export default function Home() {
             <div>
               <p className="eyebrow"><ShieldCheck size={14} /> Preflight complete</p>
               <h1>App readiness</h1>
-              <p>{repaired ? "The critical payment-recovery issue is verified. Two experience gaps still need review." : "Three issues should be reviewed before sharing SplitMate."}</p>
+              <p>{repaired ? "The payment-recovery issue is verified. Two experience gaps still need review." : "Three areas should be reviewed before sharing SplitMate."}</p>
             </div>
 
             <div className="score">
@@ -217,7 +229,7 @@ export default function Home() {
 
             <aside>
               <p className="eyebrow">Preflight summary</p>
-              <h2>Mostly ready.<br />Not blindly ready.</h2>
+              <h2>Ready enough to inspect.<br />Not ready enough to assume.</h2>
 
               <div className="summaryRow">
                 <Check size={16} />
@@ -305,10 +317,15 @@ export default function Home() {
                 </div>
               )}
             </div>
-            <p className="drawerFine">This interaction is simulated. It demonstrates a possible evaluation → explanation → repair handoff.</p>
+            <p className="drawerFine">Simulated interaction showing a possible evaluation → explanation → repair → verification loop.</p>
           </section>
         </div>
       )}
+
+      <footer className="footer">
+        <span>Independent prototype by Jubril Oyebamiji</span>
+        <span>Inspired by Bloom’s public product and hiring materials</span>
+      </footer>
     </main>
   );
 }
