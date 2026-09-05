@@ -8,7 +8,11 @@ import {
   CircleAlert,
   ShieldCheck,
   Sparkles,
-  X
+  X,
+  Wrench,
+  FileSearch,
+  Bot,
+  CheckCircle2
 } from "lucide-react";
 
 const checks = [
@@ -52,6 +56,11 @@ const checks = [
 
 export default function Home() {
   const [step, setStep] = useState<1 | 2>(1);
+  const [issueOpen, setIssueOpen] = useState(false);
+  const [agentState, setAgentState] = useState<"idle" | "working" | "ready">("idle");
+
+  const openPaymentIssue = () => { setIssueOpen(true); setAgentState("idle"); };
+  const fixWithAgent = () => { setAgentState("working"); window.setTimeout(() => setAgentState("ready"), 850); };
 
   return (
     <main className="shell">
@@ -155,7 +164,8 @@ export default function Home() {
                 <div className="checkGroup" key={group}>
                   <h3>{group}</h3>
                   {checks.filter((c) => c.group === group).map((c) => (
-                    <div className="check" key={c.name}>
+                    <div className={`check ${c.name === "Payment failure" ? "clickable" : ""}`} key={c.name}
+                      onClick={c.name === "Payment failure" ? openPaymentIssue : undefined}>
                       <div className={`status ${c.status}`}>
                         {c.status === "pass" ? (
                           <Check size={15} />
@@ -172,7 +182,7 @@ export default function Home() {
                       </div>
 
                       <span className={`label ${c.status}`}>
-                        {c.status === "pass" ? "Passed" : c.status === "warn" ? "Review" : "Issue"}
+                        {c.name === "Payment failure" ? "Open issue" : c.status === "pass" ? "Passed" : c.status === "warn" ? "Review" : "Issue"}
                       </span>
                     </div>
                   ))}
@@ -218,6 +228,28 @@ export default function Home() {
             </aside>
           </div>
         </section>
+      )}
+      {issueOpen && (
+        <div className="issueOverlay" onClick={() => setIssueOpen(false)}>
+          <section className="issueDrawer" onClick={(e) => e.stopPropagation()}>
+            <div className="drawerTop"><div><p className="eyebrow"><FileSearch size={14}/> Preflight issue</p><h2>Payment failure recovery is missing</h2></div><button className="closeBtn" onClick={() => setIssueOpen(false)}><X size={18}/></button></div>
+            <div className="severity"><span>Reliability</span><b>Needs attention before sharing</b></div>
+            <div className="issueSection"><p className="sectionLabel">WHAT FAILED</p><p>The generated checkout covers a successful payment, but the demo evaluation found no clear recovery experience for a declined payment.</p></div>
+            <div className="issueSection"><p className="sectionLabel">WHY IT MATTERS</p><p>A user whose payment is declined could be left without a clear explanation, retry path, or way to choose another payment method.</p></div>
+            <div className="evidenceCard"><div className="evidenceHead"><CircleAlert size={16}/><b>Preflight evidence</b></div>
+              <div className="evidenceLine"><span>Success state</span><strong><Check size={14}/> Found</strong></div>
+              <div className="evidenceLine"><span>Declined state</span><strong className="bad"><X size={14}/> Missing</strong></div>
+              <div className="evidenceLine"><span>Retry action</span><strong className="bad"><X size={14}/> Missing</strong></div>
+              <div className="evidenceLine"><span>Alternative method guidance</span><strong className="bad"><X size={14}/> Missing</strong></div></div>
+            <div className="repairCard"><div className="repairHead"><Wrench size={16}/><div><p className="sectionLabel">STRUCTURED REPAIR INSTRUCTION</p><b>Give the coding agent a narrow fix.</b></div></div>
+              <div className="promptBox">Add a declined-payment state to checkout. Preserve the current successful-payment flow. When a payment is declined, show a clear error message, provide a retry action, and let the user choose another payment method. Do not change unrelated screens.</div>
+              {agentState === "idle" && <button className="agentButton" onClick={fixWithAgent}><Bot size={17}/> Fix with Agent <ArrowRight size={17}/></button>}
+              {agentState === "working" && <button className="agentButton working" disabled><span className="agentDot"/> Sending repair instruction…</button>}
+              {agentState === "ready" && <div className="agentResult"><div className="agentResultTitle"><CheckCircle2 size={18}/> Repair instruction accepted</div><div><Check size={14}/> Add declined-payment state</div><div><Check size={14}/> Add retry action</div><div><Check size={14}/> Add alternative payment guidance</div><p>Demo only. No code was changed and no Bloom agent was contacted.</p></div>}
+            </div>
+            <p className="drawerFine">This interaction is simulated. It demonstrates a possible evaluation → explanation → repair handoff.</p>
+          </section>
+        </div>
       )}
     </main>
   );
